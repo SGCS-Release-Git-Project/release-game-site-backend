@@ -3,13 +3,16 @@ from fastapi.responses import JSONResponse
 import shutil, zipfile
 from pathlib import Path
 from uuid import uuid4
+import traceback
 
 from modules.mcp_git import rCall_PushAndPR
+from etc.logger import rInit_Logger
 
 TMP_ROOT = Path("/tmp/mcp_uploads")
 TMP_ROOT.mkdir(exist_ok=True, parents=True)
 
 rgRouter = APIRouter()
+mgPrintLog = rInit_Logger(__file__,"DEBUG")
 
 @rgRouter.post("")
 async def Api_MCPGit(file: UploadFile = File(...), name:str = Form(...), token:str = Form(...)) :
@@ -43,6 +46,7 @@ async def Api_MCPGit(file: UploadFile = File(...), name:str = Form(...), token:s
         )
 
     except Exception as e:
+        mgPrintLog.error(f"Value Error: {str(e)}\n{traceback.format_exc()}")
         
         return JSONResponse(
             status_code=500, 
