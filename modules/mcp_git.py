@@ -42,8 +42,12 @@ async def rCall_PushAndPR(my_dir_name:str, dir_name:str, branch_name:str, pr_tit
 
     async with MultiServerMCPClient({
         "github": {
-            "command": "/usr/local/bin/github-mcp-server",
-            "args": ["stdio"],   # stdio 서버 직접 실행
+            "command": "docker",
+            "args": [
+                "run", "-i", "--rm",
+                "-e", "GITHUB_PERSONAL_ACCESS_TOKEN",
+                "ghcr.io/github/github-mcp-server"
+            ],
             "env": {"GITHUB_PERSONAL_ACCESS_TOKEN": git_token},
             "transport": "stdio"
         }

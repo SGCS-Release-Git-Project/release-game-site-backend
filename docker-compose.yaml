@@ -11,7 +11,13 @@ services:
       - "8011:8011"
     restart: always
     volumes:
-      - .:/backend
+      # 호스트 Docker 데몬 소켓 공유
+      - /var/run/docker.sock:/var/run/docker.sock
+      # 개발 중 코드 핫리로드용(선택)
+      # - .:/backend
+    environment:
+      # 컨테이너 내부에서 Docker 명령이 호스트 데몬을 쓰도록
+      - DOCKER_HOST=unix:///var/run/docker.sock
     networks:
       - ai-advisor-networks
 
